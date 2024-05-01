@@ -114,11 +114,9 @@ export function getDeclaration(ctx: Context, filepath: string, originalImports?:
     directive: stringifyDeclarationImports({ ...originalImports?.directive, ...imports.directive }),
   }
 
-  const head = ctx.options.version === 2.7
-    ? `export {}
+  const head = `export {}
 
-declare module 'vue' {`
-    : `export {}
+import { GlobalComponents } from 'vue'
 
 declare module 'vue' {`
 
@@ -142,6 +140,12 @@ ${head}`
   }`
   }
   code += '\n}\n'
+  if (Object.keys(declarations.component).length > 0) {
+    code += `
+declare global {
+  ${declarations.component.map(d => d.replace(/(.+):/, 'const $1:')).join('\n  ')}
+}`
+  }
   return code
 }
 
