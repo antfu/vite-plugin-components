@@ -37,6 +37,7 @@ const config: UserConfig = {
           componentPrefix: 'i',
         }),
       ],
+      dumpUnimportComponents: true,
     }),
   ],
   build: {
