@@ -43,6 +43,7 @@ export default createUnplugin<Options>((options = {}) => {
       try {
         const result = await ctx.transform(code, id)
         ctx.generateDeclaration()
+        ctx.generateComponentsJson()
         return result
       }
       catch (e) {
@@ -62,6 +63,11 @@ export default createUnplugin<Options>((options = {}) => {
           ctx.searchGlob()
           if (!existsSync(ctx.options.dts))
             ctx.generateDeclaration()
+        }
+
+        if (ctx.options.dumpUnimportComponents && ctx.dumpUnimportComponentsPath) {
+          if (!existsSync(ctx.dumpUnimportComponentsPath))
+            ctx.generateComponentsJson()
         }
 
         if (config.build.watch && config.command === 'build')
