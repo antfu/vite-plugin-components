@@ -35,7 +35,7 @@ export function VueUseDirectiveResolver(): ComponentResolver {
       }
 
       if (directives && directives.includes(name))
-        return { name: `v${name}`, as: name, from: '@vueuse/components' }
+        return { name: `v${name}`, as: `v${name}`, from: '@vueuse/components' }
     },
   }
 }
