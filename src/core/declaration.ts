@@ -156,3 +156,22 @@ export async function writeDeclaration(ctx: Context, filepath: string, removeUnu
   if (code !== originalContent)
     await writeFile(filepath, code)
 }
+
+export async function writeComponentsJson(ctx: Context, _removeUnused = false) {
+  if (!ctx.dumpUnimportComponentsPath)
+    return
+
+  const components = [
+    ...Object.entries({
+      ...ctx.componentNameMap,
+      ...ctx.componentCustomMap,
+    }).map(([_, { name, as, from }]) => ({
+      name: name || 'default',
+      as,
+      from,
+    })),
+    ...resolveTypeImports(ctx.options.types),
+  ]
+
+  await writeFile(ctx.dumpUnimportComponentsPath, JSON.stringify(components, null, 2))
+}

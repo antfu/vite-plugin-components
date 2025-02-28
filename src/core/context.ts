@@ -6,7 +6,7 @@ import process from 'node:process'
 import { slash, throttle, toArray } from '@antfu/utils'
 import Debug from 'debug'
 import { DIRECTIVE_IMPORT_PREFIX } from './constants'
-import { writeDeclaration } from './declaration'
+import { writeComponentsJson, writeDeclaration } from './declaration'
 import { searchComponents } from './fs/glob'
 import { resolveOptions } from './options'
 import transformer from './transformer'
@@ -34,12 +34,23 @@ export class Context {
   root = process.cwd()
   sourcemap: string | boolean = true
   alias: Record<string, string> = {}
+  dumpUnimportComponentsPath: string | undefined
 
   constructor(
     private rawOptions: Options,
   ) {
     this.options = resolveOptions(rawOptions, this.root)
     this.generateDeclaration = throttle(500, this._generateDeclaration.bind(this), { noLeading: false })
+
+    if (this.options.dumpUnimportComponents) {
+      const dumpUnimportComponents = this.options.dumpUnimportComponents === true
+        ? './.unimport-components.json'
+        : this.options.dumpUnimportComponents ?? false
+
+      this.dumpUnimportComponentsPath = dumpUnimportComponents
+      this.generateComponentsJson = throttle(500, this._generateComponentsJson.bind(this), { noLeading: false })
+    }
+
     this.setTransformer(this.options.transformer)
   }
 
@@ -287,12 +298,24 @@ export class Context {
     if (!this.options.dts)
       return
 
-    debug.declaration('generating')
+    debug.declaration('generating dts')
     return writeDeclaration(this, this.options.dts, removeUnused)
   }
 
   generateDeclaration(removeUnused = !this._server): void {
     this._generateDeclaration(removeUnused)
+  }
+
+  _generateComponentsJson(removeUnused = !this._server) {
+    if (!Object.keys(this._componentNameMap).length)
+      return
+
+    debug.components('generating components.json')
+    return writeComponentsJson(this, removeUnused)
+  }
+
+  generateComponentsJson(removeUnused = !this._server): void {
+    this._generateComponentsJson(removeUnused)
   }
 
   get componentNameMap() {

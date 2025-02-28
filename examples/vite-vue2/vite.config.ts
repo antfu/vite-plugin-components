@@ -8,6 +8,7 @@ const config: UserConfig = {
     Components({
       transformer: 'vue2',
       dts: 'src/components.d.ts',
+      dumpUnimportComponents: true,
     }),
   ],
   build: {
