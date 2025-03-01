@@ -7,6 +7,7 @@ import chokidar from 'chokidar'
 import { createUnplugin } from 'unplugin'
 import { createFilter } from 'unplugin-utils'
 import { Context } from './context'
+import { genComponentUsedPath } from './options'
 import { shouldTransform, stringifyComponentImport } from './utils'
 
 const PLUGIN_NAME = 'unplugin:webpack'
@@ -41,7 +42,10 @@ export default createUnplugin<Options>((options = {}) => {
     transformInclude(id) {
       return filter(id)
     },
-
+    buildEnd() {
+      if (options.genComponentUsedPath?.enable)
+        genComponentUsedPath(options)
+    },
     async transform(code, id) {
       if (!shouldTransform(code))
         return null

@@ -37,6 +37,11 @@ const config: UserConfig = {
           componentPrefix: 'i',
         }),
       ],
+      genComponentUsedPath: {
+        enable: true,
+        exclude: [/Van\w+/],
+        genFilePath: './unplugin-vue-component-used-path_rename.json',
+      },
     }),
   ],
   build: {

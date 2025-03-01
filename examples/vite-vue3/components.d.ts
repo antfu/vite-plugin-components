@@ -9,7 +9,6 @@ declare module 'vue' {
   export interface GlobalComponents {
     Avatar: typeof import('./src/components/global/avatar.vue')['default']
     Book: typeof import('./src/components/book/index.vue')['default']
-    CollapseCollapseFolderAndCollapseFolderAndComponentPrefixes: typeof import('./src/components/collapse/collapseFolderAnd/CollapseFolderAndComponentPrefixes.vue')['default']
     CollapseCollapseFolderCollapseFolderAndComponentFromRoot: typeof import('./src/components/collapse/collapseFolder/CollapseFolderAndComponentFromRoot.vue')['default']
     CollapseCollapseFolderFolderAndComponentPartially: typeof import('./src/components/collapse/collapseFolder/FolderAndComponentPartially.vue')['default']
     ComponentA: typeof import('./src/components/ComponentA.vue')['default']

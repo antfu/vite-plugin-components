@@ -46,6 +46,14 @@ export type Transformer = (code: string, id: string, path: string, query: Record
 
 export type SupportedTransformer = 'vue3' | 'vue2'
 
+export interface IGenComponentUsedPathOnBuildEndOptions {
+  /** default: false */
+  enable?: boolean
+  exclude?: string | RegExp | (string | RegExp)[] | undefined
+  /** default: './unplugin-vue-component-used-path.json' */
+  genFilePath?: string
+}
+
 export interface PublicPluginAPI {
   /**
    * Resolves a component using the configured resolvers.
@@ -198,6 +206,12 @@ export interface Options {
    * Vue version of project. It will detect automatically if not specified.
    */
   version?: 2 | 2.7 | 3
+  /**
+   * Generate components refrence on buildEnd
+   * forexample  {"ComponentB": ["/src/App.vue", "/src/components/ComponentD.vue" ]}
+   * @default {enable:false,genFilePath:'./unplugin-vue-component-used-path.json'}
+   */
+  genComponentUsedPath?: IGenComponentUsedPathOnBuildEndOptions
 }
 
 export type ResolvedOptions = Omit<

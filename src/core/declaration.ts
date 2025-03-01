@@ -140,7 +140,7 @@ declare module 'vue' {`
   return code
 }
 
-async function writeFile(filePath: string, content: string) {
+export async function writeFile(filePath: string, content: string) {
   await mkdir(dirname(filePath), { recursive: true })
   return await writeFile_(filePath, content, 'utf-8')
 }

@@ -2,6 +2,8 @@ import type { ComponentResolver, ComponentResolverObject, Options, ResolvedOptio
 import { join, resolve } from 'node:path'
 import { slash, toArray } from '@antfu/utils'
 import { getPackageInfoSync, isPackageExists } from 'local-pkg'
+import { writeFile } from './declaration'
+import { componentUsedMap } from './transforms/component'
 import { detectTypeImports } from './type-imports/detect'
 
 export const defaultOptions: Omit<Required<Options>, 'include' | 'exclude' | 'excludeNames' | 'transformer' | 'globs' | 'globsExclude' | 'directives' | 'types' | 'version'> = {
@@ -19,7 +21,11 @@ export const defaultOptions: Omit<Required<Options>, 'include' | 'exclude' | 'ex
   resolvers: [],
 
   importPathTransform: v => v,
-
+  genComponentUsedPath: {
+    enable: false,
+    genFilePath: './unplugin-vue-component-used-path.json',
+    exclude: [],
+  },
   allowOverrides: false,
 }
 
@@ -114,4 +120,9 @@ function getVueVersion(root: string): 2 | 2.7 | 3 {
   else if (version < 2.7)
     return 2
   return 3
+}
+
+export function genComponentUsedPath(options: Options) {
+  Object.keys(componentUsedMap).map(key => componentUsedMap[key] = [...componentUsedMap[key]])
+  writeFile(options.genComponentUsedPath?.genFilePath || './unplugin-vue-component-used-path.json', JSON.stringify(componentUsedMap))
 }
